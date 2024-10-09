@@ -1,4 +1,4 @@
-FROM hub.atomgit.com/arm64v8/alpine:3.8
+FROM hub.atomgit.com/arm64v8/alpine
 LABEL maintainer="www.mrdoc.fun"
 ENV TZ=Asia/Shanghai \
     PORT=8886 \
