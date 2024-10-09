@@ -1,4 +1,4 @@
-FROM hub.atomgit.com/arm64v8/alpine:3.8
+FROM amd64/alpine
 LABEL maintainer="www.mrdoc.fun"
 ENV TZ=Asia/Shanghai \
     PORT=8886 \
@@ -6,10 +6,6 @@ ENV TZ=Asia/Shanghai \
 WORKDIR /app
 COPY files/verysync-linux-amd64-*.tar.gz /tmp
 COPY docker-entrypoint.sh /app
-COPY qemu-aarch64-static /usr/bin/
-
-RUN mkdir /usr/local/bin/gosu 
-COPY files/gosu-amd64 /usr/local/bin/gosu
 
 RUN apk add --no-cache tzdata bash \
     && tar -xzvf /tmp/verysync-linux-amd64-*.tar.gz -C /tmp \
@@ -21,7 +17,8 @@ RUN apk add --no-cache tzdata bash \
     && addgroup -S nonverysync && adduser -S nonverysync -G nonverysync \
     && chmod +x /app/docker-entrypoint.sh
 
-RUN chmod +x /usr/local/bin/gosu \
+RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/1.16/gosu-amd64" \
+    && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
 
 HEALTHCHECK --interval=1m --timeout=10s \
